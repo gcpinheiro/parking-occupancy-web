@@ -91,7 +91,11 @@
 
       <figure class="image-panel card">
         <figcaption>Imagem processada</figcaption>
-        @if (processedImageUrl()) {
+        @if (isLoading()) {
+          <div class="image-skeleton" aria-label="Carregando imagem processada">
+            <span class="skeleton-block"></span>
+          </div>
+        } @else if (processedImageUrl()) {
           <img [src]="processedImageUrl()" alt="Resultado processado da análise da vaga" />
         } @else {
           <div class="empty-state">
@@ -101,7 +105,35 @@
       </figure>
     </div>
 
-    @if (result(); as analysis) {
+    @if (isLoading()) {
+      <section class="results-skeleton card" aria-label="Carregando resultado da análise">
+        <div class="skeleton-header">
+          <span class="skeleton-line skeleton-title"></span>
+          <span class="skeleton-line skeleton-subtitle"></span>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat skeleton-stat">
+            <span class="skeleton-line"></span>
+            <strong class="skeleton-number"></strong>
+          </article>
+          <article class="stat skeleton-stat">
+            <span class="skeleton-line"></span>
+            <strong class="skeleton-number"></strong>
+          </article>
+          <article class="stat skeleton-stat">
+            <span class="skeleton-line"></span>
+            <strong class="skeleton-number"></strong>
+          </article>
+        </div>
+
+        <div class="table-wrap skeleton-table">
+          <span class="skeleton-row"></span>
+          <span class="skeleton-row"></span>
+          <span class="skeleton-row"></span>
+        </div>
+      </section>
+    } @else if (result(); as analysis) {
       <section class="results card">
         <div class="card-header">
           <div>

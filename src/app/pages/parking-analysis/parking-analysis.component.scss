@@ -320,7 +320,8 @@ figcaption {
 }
 
 .image-panel img,
-.empty-state {
+.empty-state,
+.image-skeleton {
   display: block;
   width: calc(100% - 32px);
   margin: 16px;
@@ -344,8 +345,64 @@ figcaption {
   text-align: center;
 }
 
-.results {
+.image-skeleton {
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.skeleton-block,
+.skeleton-line,
+.skeleton-number,
+.skeleton-row {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.skeleton-block {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+}
+
+.skeleton-line::after,
+.skeleton-number::after,
+.skeleton-row::after,
+.skeleton-block::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+  content: "";
+  transform: translateX(-100%);
+  animation: shimmer 1.35s infinite;
+}
+
+.results,
+.results-skeleton {
   animation: fade-in 220ms ease both;
+}
+
+.results-skeleton {
+  padding: 26px;
+}
+
+.skeleton-header {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.skeleton-title {
+  width: min(280px, 70%);
+  height: 22px;
+}
+
+.skeleton-subtitle {
+  width: min(460px, 88%);
+  height: 14px;
 }
 
 .stats-grid {
@@ -362,6 +419,22 @@ figcaption {
   border-radius: 16px;
   padding: 20px;
   background: #f8fafc;
+}
+
+.skeleton-stat {
+  min-height: 104px;
+}
+
+.skeleton-stat .skeleton-line {
+  width: 58%;
+  height: 14px;
+}
+
+.skeleton-number {
+  width: 54px;
+  height: 34px;
+  margin-top: 14px;
+  border-radius: 10px;
 }
 
 .stat::before {
@@ -408,6 +481,29 @@ figcaption {
   overflow-x: auto;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
+}
+
+.skeleton-table {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.skeleton-row {
+  height: 18px;
+  border-radius: 10px;
+}
+
+.skeleton-row:nth-child(1) {
+  width: 92%;
+}
+
+.skeleton-row:nth-child(2) {
+  width: 78%;
+}
+
+.skeleton-row:nth-child(3) {
+  width: 86%;
 }
 
 table {
@@ -492,6 +588,12 @@ td {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }
 
