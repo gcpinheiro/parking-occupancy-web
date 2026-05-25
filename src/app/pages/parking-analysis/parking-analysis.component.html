@@ -1,0 +1,94 @@
+<main class="analysis-page">
+  <section class="intro">
+    <div>
+      <p class="eyebrow">Digital Image Processing</p>
+      <h1>Parking Occupancy Analysis</h1>
+      <p class="summary">
+        Upload a parking lot image and compare the original frame with the processed result
+        returned by the FastAPI backend.
+      </p>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <div class="upload-panel">
+      <label class="file-drop">
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <span class="file-title">Current Image</span>
+        <span class="file-name">{{ selectedFile()?.name || 'JPG, PNG, or another image format' }}</span>
+      </label>
+
+      <button type="button" (click)="analyzeImage()" [disabled]="!selectedFile() || isLoading()">
+        {{ isLoading() ? 'Processing...' : 'Analyze image' }}
+      </button>
+
+      @if (errorMessage()) {
+        <p class="error-message">{{ errorMessage() }}</p>
+      }
+    </div>
+
+    <div class="image-grid">
+      <figure class="image-panel">
+        <figcaption>Current image</figcaption>
+        @if (previewUrl()) {
+          <img [src]="previewUrl()" alt="Selected parking lot preview" />
+        } @else {
+          <div class="empty-state">No image selected</div>
+        }
+      </figure>
+
+      <figure class="image-panel">
+        <figcaption>Processed image</figcaption>
+        @if (processedImageUrl()) {
+          <img [src]="processedImageUrl()" alt="Parking analysis processed result" />
+        } @else {
+          <div class="empty-state">Run the analysis to view the result</div>
+        }
+      </figure>
+    </div>
+
+    @if (result(); as analysis) {
+      <section class="results">
+        <div class="stats-grid">
+          <article class="stat">
+            <span>Total spaces</span>
+            <strong>{{ analysis.totalSpaces }}</strong>
+          </article>
+          <article class="stat free">
+            <span>Free spaces</span>
+            <strong>{{ analysis.freeSpaces }}</strong>
+          </article>
+          <article class="stat occupied">
+            <span>Occupied spaces</span>
+            <strong>{{ analysis.occupiedSpaces }}</strong>
+          </article>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Space</th>
+                <th>Status</th>
+                <th>Edge score</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (space of analysis.spaces; track space.id) {
+                <tr>
+                  <td>#{{ space.id }}</td>
+                  <td>
+                    <span class="status" [class.free]="space.status === 'free'" [class.occupied]="space.status === 'occupied'">
+                      {{ space.status }}
+                    </span>
+                  </td>
+                  <td>{{ formatScore(space.score) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  </section>
+</main>
