@@ -9,7 +9,7 @@ import { ParkingAnalysisResponse } from '../models/parking-analysis.model';
 })
 export class ParkingAnalysisService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000';
+  private readonly apiUrl = 'https://parking-occupancy-api.onrender.com';
 
   analyzeImage(image: File): Observable<ParkingAnalysisResponse> {
     const formData = new FormData();
