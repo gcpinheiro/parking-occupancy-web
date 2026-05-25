@@ -1,65 +1,126 @@
 <main class="analysis-page">
-  <section class="intro">
-    <div>
-      <p class="eyebrow">Digital Image Processing</p>
-      <h1>Parking Occupancy Analysis</h1>
+  <section class="hero">
+    <div class="hero-icon" aria-hidden="true">
+      <span>🅿</span>
+    </div>
+    <div class="hero-content">
+      <p class="eyebrow">Processamento Digital de Imagens</p>
+      <h1>Análise de Ocupação de Vagas</h1>
       <p class="summary">
-        Upload a parking lot image and compare the original frame with the processed result
-        returned by the FastAPI backend.
+        Processamento digital de imagens para identificação automática de ocupação de vagas
+        de estacionamento
       </p>
     </div>
   </section>
 
   <section class="workspace">
-    <div class="upload-panel">
-      <label class="file-drop">
-        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
-        <span class="file-title">Current Image</span>
-        <span class="file-name">{{ selectedFile()?.name || 'JPG, PNG, or another image format' }}</span>
-      </label>
+    <section class="upload-card card">
+      <div class="card-header">
+        <div>
+          <h2>Imagem para análise</h2>
+          <p>Selecione uma imagem da vaga para verificar se ela está ocupada ou livre.</p>
+        </div>
+      </div>
 
-      <button type="button" (click)="analyzeImage()" [disabled]="!selectedFile() || isLoading()">
-        {{ isLoading() ? 'Processing...' : 'Analyze image' }}
-      </button>
+      <div class="upload-actions">
+        <label class="file-drop">
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+          <span class="upload-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path
+                d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.29a1 1 0 1 1 1.4 1.42l-4 3.98a1 1 0 0 1-1.4 0l-4-3.98a1 1 0 1 1 1.4-1.42l2.3 2.29V4a1 1 0 0 1 1-1Zm-7 13a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"
+              />
+            </svg>
+          </span>
+          <span class="file-title">Imagem atual</span>
+          <span class="file-name">{{ selectedFile()?.name || 'JPG, PNG ou outro formato de imagem' }}</span>
+        </label>
+
+        <button type="button" class="analyze-button" (click)="analyzeImage()" [disabled]="!selectedFile() || isLoading()">
+          @if (isLoading()) {
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Processando imagem...</span>
+          } @else {
+            <span>Analisar imagem</span>
+          }
+        </button>
+      </div>
 
       @if (errorMessage()) {
-        <p class="error-message">{{ errorMessage() }}</p>
+        <div class="error-message" role="alert">
+          <strong>Erro</strong>
+          <span>{{ errorMessage() }}</span>
+        </div>
       }
-    </div>
+    </section>
+
+    <section class="download-card card">
+      <div>
+        <h2>Imagens de teste</h2>
+        <p>Baixe o pacote de imagens de teste para validar a análise da vaga.</p>
+      </div>
+
+      <a
+        class="download-button"
+        href="/parking-test-images.zip"
+        download
+        aria-label="Baixar pacote de imagens de teste"
+      >
+        <span class="download-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path
+              d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.29a1 1 0 1 1 1.4 1.42l-4 3.98a1 1 0 0 1-1.4 0l-4-3.98a1 1 0 1 1 1.4-1.42l2.3 2.29V4a1 1 0 0 1 1-1Zm-7 13a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"
+            />
+          </svg>
+        </span>
+        <span>Baixar imagens de teste</span>
+      </a>
+    </section>
 
     <div class="image-grid">
-      <figure class="image-panel">
-        <figcaption>Current image</figcaption>
+      <figure class="image-panel card">
+        <figcaption>Imagem original</figcaption>
         @if (previewUrl()) {
-          <img [src]="previewUrl()" alt="Selected parking lot preview" />
+          <img [src]="previewUrl()" alt="Pré-visualização da imagem selecionada" />
         } @else {
-          <div class="empty-state">No image selected</div>
+          <div class="empty-state">
+            <span>Envie uma imagem para iniciar a análise.</span>
+          </div>
         }
       </figure>
 
-      <figure class="image-panel">
-        <figcaption>Processed image</figcaption>
+      <figure class="image-panel card">
+        <figcaption>Imagem processada</figcaption>
         @if (processedImageUrl()) {
-          <img [src]="processedImageUrl()" alt="Parking analysis processed result" />
+          <img [src]="processedImageUrl()" alt="Resultado processado da análise da vaga" />
         } @else {
-          <div class="empty-state">Run the analysis to view the result</div>
+          <div class="empty-state">
+            <span>O resultado processado aparecerá aqui.</span>
+          </div>
         }
       </figure>
     </div>
 
     @if (result(); as analysis) {
-      <section class="results">
+      <section class="results card">
+        <div class="card-header">
+          <div>
+            <h2>Resultado da análise</h2>
+            <p>Resumo da ocupação identificada para a imagem enviada.</p>
+          </div>
+        </div>
+
         <div class="stats-grid">
           <article class="stat">
-            <span>Total spaces</span>
+            <span>Total de vagas</span>
             <strong>{{ analysis.totalSpaces }}</strong>
           </article>
           <article class="stat free">
-            <span>Free spaces</span>
+            <span>Vagas livres</span>
             <strong>{{ analysis.freeSpaces }}</strong>
           </article>
           <article class="stat occupied">
-            <span>Occupied spaces</span>
+            <span>Vagas ocupadas</span>
             <strong>{{ analysis.occupiedSpaces }}</strong>
           </article>
         </div>
@@ -68,9 +129,9 @@
           <table>
             <thead>
               <tr>
-                <th>Space</th>
+                <th>ID</th>
                 <th>Status</th>
-                <th>Edge score</th>
+                <th>Pontuação</th>
               </tr>
             </thead>
             <tbody>
@@ -79,7 +140,7 @@
                   <td>#{{ space.id }}</td>
                   <td>
                     <span class="status" [class.free]="space.status === 'free'" [class.occupied]="space.status === 'occupied'">
-                      {{ space.status }}
+                      {{ space.status === 'free' ? 'Livre' : 'Ocupada' }}
                     </span>
                   </td>
                   <td>{{ formatScore(space.score) }}</td>
@@ -89,6 +150,14 @@
           </table>
         </div>
       </section>
+    } @else {
+      <section class="placeholder-card card">
+        <span>Envie uma imagem para iniciar a análise.</span>
+      </section>
     }
+
+    <footer class="footer-card card">
+      Projeto acadêmico de Computação Gráfica e Processamento Digital de Imagens
+    </footer>
   </section>
 </main>

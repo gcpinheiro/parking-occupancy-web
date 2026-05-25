@@ -46,7 +46,7 @@ export class ParkingAnalysisComponent {
 
     if (!file.type.startsWith('image/')) {
       this.selectedFile.set(null);
-      this.errorMessage.set('Select a valid image file.');
+      this.errorMessage.set('Selecione um arquivo de imagem válido.');
       input.value = '';
       return;
     }
@@ -59,7 +59,7 @@ export class ParkingAnalysisComponent {
     const file = this.selectedFile();
 
     if (!file) {
-      this.errorMessage.set('Select an image before starting the analysis.');
+      this.errorMessage.set('Selecione uma imagem antes de iniciar a análise.');
       return;
     }
 
@@ -74,7 +74,7 @@ export class ParkingAnalysisComponent {
         next: (response) => this.result.set(response),
         error: () => {
           this.errorMessage.set(
-            'Could not process the image. Check if the backend is running at http://localhost:8000.',
+            'Ocorreu um erro ao processar a imagem. Tente novamente.',
           );
         },
       });
